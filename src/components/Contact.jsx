@@ -357,9 +357,9 @@ const Contact = () => {
             className="mt-16 pt-8 border-t border-gray-800 text-center"
           >
             <p className="text-gray-500 mb-4">
-              Crafted with <span className="text-red-500">❤️</span> using React, Node.js, and modern web technologies
+              Crafted with React, Tailwind, and modern web technologies
             </p>
-            <p className="text-sm text-gray-600">© 2025 Montu Prajapati. Full Stack Developer. All rights reserved.</p>
+            <p className="text-sm text-gray-600">Montu Prajapati. Frontend Developer. All rights reserved.</p>
           </motion.div>
         </motion.div>
       </div>

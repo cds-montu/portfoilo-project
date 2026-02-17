@@ -22,16 +22,16 @@ const Skills = () => {
       skills: ['Redux', 'Redux Toolkit', 'Context API', 'Zustand', 'React Hooks'],
       color: 'from-orange-500 to-red-500',
     },
-    {
-      category: 'Backend & APIs',
-      skills: ['Node.js', 'Express.js', 'REST APIs', 'Authentication', 'Middleware'],
-      color: 'from-green-500 to-emerald-500',
-    },
-    {
-      category: 'Database',
-      skills: ['MySQL', 'Knex.js', 'Query Optimization', 'Migrations', 'Relationships'],
-      color: 'from-yellow-500 to-amber-500',
-    },
+    // {
+    //   category: 'Backend & APIs',
+    //   skills: ['Node.js', 'Express.js', 'REST APIs', 'Authentication', 'Middleware'],
+    //   color: 'from-green-500 to-emerald-500',
+    // },
+    // {
+    //   category: 'Database',
+    //   skills: ['MySQL', 'Knex.js', 'Query Optimization', 'Migrations', 'Relationships'],
+    //   color: 'from-yellow-500 to-amber-500',
+    // },
     {
       category: 'Advanced Features',
       skills: ['E-commerce', 'Payment Integration', 'Cart & Checkout', 'Role-based Access', 'CSV Upload', 'CRUD Operations'],

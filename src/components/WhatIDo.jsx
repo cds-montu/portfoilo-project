@@ -12,12 +12,12 @@ const WhatIDo = () => {
       icon: '⚛️',
       color: 'from-blue-500 to-cyan-500',
     },
-    {
-      title: 'Full Stack Architecture',
-      description: 'End-to-end development from database design to frontend, using Node.js and Express.',
-      icon: '🏗️',
-      color: 'from-purple-500 to-pink-500',
-    },
+    // {
+    //   title: 'Full Stack Architecture',
+    //   description: 'End-to-end development from database design to frontend, using Node.js and Express.',
+    //   icon: '🏗️',
+    //   color: 'from-purple-500 to-pink-500',
+    // },
     {
       title: 'E-commerce Solutions',
       description: 'Complete e-commerce platforms with cart, checkout, payments, and inventory systems.',
