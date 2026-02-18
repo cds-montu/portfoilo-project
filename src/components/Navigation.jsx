@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useSmoothScroll, useActiveLink } from '../hooks/useNavigation';
 
 const Navigation = () => {
@@ -17,6 +18,51 @@ const Navigation = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Lock body scroll while mobile menu is open — persist original value in a ref
+  const originalBodyOverflow = useRef('');
+  useEffect(() => {
+    // Capture original overflow on mount
+    originalBodyOverflow.current = document.body.style.overflow || '';
+    return () => {
+      // restore when component unmounts
+      document.body.style.overflow = originalBodyOverflow.current;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = originalBodyOverflow.current || '';
+    }
+  }, [isOpen]);
+
+  // Reset/close menu on visibility change, popstate, resize to desktop, or Escape key
+  useEffect(() => {
+    const handleVisibility = () => {
+      if (document.hidden) setIsOpen(false);
+    };
+    const handlePop = () => setIsOpen(false);
+    const handleResize = () => {
+      if (window.innerWidth >= 768) setIsOpen(false);
+    };
+    const handleKey = (e) => {
+      if (e.key === 'Escape') setIsOpen(false);
+    };
+
+    document.addEventListener('visibilitychange', handleVisibility);
+    window.addEventListener('popstate', handlePop);
+    window.addEventListener('resize', handleResize);
+    document.addEventListener('keydown', handleKey);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('popstate', handlePop);
+      window.removeEventListener('resize', handleResize);
+      document.removeEventListener('keydown', handleKey);
+    };
+  }, []);
+
   const navItems = [
     { name: 'Home', id: 'home' },
     { name: 'What I Do', id: 'what-i-do' },
@@ -29,7 +75,8 @@ const Navigation = () => {
     // proactively set active link so UI updates immediately
     if (setActiveLink) setActiveLink(sectionId);
     scrollToSection(sectionId);
-    setIsOpen(false); // Close mobile menu
+    // Close mobile menu after a short delay to ensure smooth scroll begins
+    setIsOpen(false);
   };
 
   const isActive = (sectionId) => activeLink === sectionId;
@@ -122,64 +169,87 @@ const Navigation = () => {
         <motion.button
           aria-label="Toggle menu"
           aria-expanded={isOpen}
-          className="md:hidden w-12 h-12 flex items-center justify-center bg-none border-none rounded-md"
-          onClick={() => setIsOpen(!isOpen)}
+          className="md:hidden fixed top-4 right-4 w-12 h-12 flex items-center justify-center bg-none border-none rounded-md z-[9999]"
+          onClick={() => setIsOpen((prev) => !prev)}
           whileTap={{ scale: 0.95 }}
         >
-          <div className="relative w-8 h-6">
-            <motion.span
-              className="absolute left-0 right-0 h-0.5 bg-white block"
-              variants={lineVariants}
-              animate={isOpen ? 'topOpen' : 'closed'}
-              transition={{ duration: 0.22 }}
-            />
-            <motion.span
-              className="absolute left-0 right-0 h-0.5 bg-white block"
-              style={{ top: '50%' }}
-              variants={lineVariants}
-              animate={isOpen ? 'middleOpen' : 'closed'}
+          <div className="relative w-8 h-6 flex items-center justify-center">
+            {/* Hamburger icon (3 lines) */}
+            <motion.svg
+              width="22"
+              height="16"
+              viewBox="0 0 22 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="absolute pointer-events-none"
+              initial={false}
+              animate={{ opacity: isOpen ? 0 : 1 }}
               transition={{ duration: 0.18 }}
-            />
-            <motion.span
-              className="absolute left-0 right-0 h-0.5 bg-white block"
-              variants={lineVariants}
-              animate={isOpen ? 'bottomOpen' : 'closed'}
-              transition={{ duration: 0.22 }}
-            />
+              aria-hidden="true"
+            >
+              <path d="M1 1h20" stroke="white" strokeWidth="2" strokeLinecap="round" />
+              <path d="M1 8h20" stroke="white" strokeWidth="2" strokeLinecap="round" />
+              <path d="M1 15h20" stroke="white" strokeWidth="2" strokeLinecap="round" />
+            </motion.svg>
+
+            {/* Close (X) icon */}
+            <motion.svg
+              width="22"
+              height="22"
+              viewBox="0 0 22 22"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="absolute pointer-events-none"
+              initial={false}
+              animate={{ opacity: isOpen ? 1 : 0, rotate: isOpen ? 0 : -90 }}
+              transition={{ duration: 0.18 }}
+              aria-hidden="true"
+            >
+              <path d="M3 3L19 19" stroke="white" strokeWidth="2.2" strokeLinecap="round" />
+              <path d="M19 3L3 19" stroke="white" strokeWidth="2.2" strokeLinecap="round" />
+            </motion.svg>
           </div>
         </motion.button>
       </div>
 
-      {/* Mobile Navigation Menu */}
-      <motion.div
-        variants={menuVariants}
-        initial="hidden"
-        animate={isOpen ? 'visible' : 'hidden'}
-        className={`md:hidden fixed inset-0 bg-primary/95 backdrop-blur-md z-50 ${isOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}
-      >
-        <div className="px-6 pt-24 pb-8 h-full overflow-auto">
-            {navItems.map((item) => (
-              <motion.button
-                key={item.id}
-                onClick={() => handleNavClick(item.id)}
-                variants={itemVariants}
-                className={`block w-full text-left font-medium py-4 text-2xl transition-colors ${
-                  isActive(item.id) ? 'text-red-500' : (item.id === 'home' ? 'text-white' : 'text-gray-300 hover:text-white')
-                }`}
-              >
-                {item.name}
-              </motion.button>
-            ))}
-            <motion.button
-              variants={itemVariants}
-              onClick={() => handleNavClick('contact')}
-              className="w-full mt-6 px-6 py-4 bg-red-600 text-white rounded-lg font-semibold text-lg"
-              whileTap={{ scale: 0.95 }}
+      {/* Mobile Navigation Menu is portaled to document.body to avoid clipping */}
+      {typeof document !== 'undefined' && createPortal(
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              variants={menuVariants}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              className={`md:hidden fixed inset-0 bg-primary/95 backdrop-blur-md z-50 pointer-events-auto`}
             >
-              Let's Connect
-            </motion.button>
-        </div>
-      </motion.div>
+              <div className="px-6 pt-24 pb-8 h-full overflow-auto">
+                {navItems.map((item) => (
+                  <motion.button
+                    key={item.id}
+                    onClick={() => handleNavClick(item.id)}
+                    variants={itemVariants}
+                    className={`block w-full text-left font-medium py-4 text-2xl transition-colors ${
+                      isActive(item.id) ? 'text-red-500' : (item.id === 'home' ? 'text-white' : 'text-gray-300 hover:text-white')
+                    }`}
+                  >
+                    {item.name}
+                  </motion.button>
+                ))}
+                <motion.button
+                  variants={itemVariants}
+                  onClick={() => handleNavClick('contact')}
+                  className="w-full mt-6 px-6 py-4 bg-red-600 text-white rounded-lg font-semibold text-lg"
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Let's Connect
+                </motion.button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </motion.nav>
   );
 };

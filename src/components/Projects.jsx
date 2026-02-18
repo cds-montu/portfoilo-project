@@ -172,7 +172,7 @@ const Projects = () => {
                         {/* CTA Button */}
                         <motion.button
                           onClick={() => scrollToSection('contact')}
-                          className={`px-8 py-3 rounded-lg bg-gradient-to-r ${project.accent} text-white font-semibold relative overflow-hidden group`}
+                          className={`px-8 py-3 rounded-lg bg-gradient-to-r ${project.accent} text-white font-semibold relative overflow-hidden group magnetic interactive`}
                           whileHover={{ scale: 1.04, boxShadow: '0 0 28px rgba(255, 107, 107, 0.28)' }}
                           whileTap={{ scale: 0.98 }}
                           animate={hoveredProject === project.id ? { x: 8 } : { x: 0 }}
@@ -194,6 +194,24 @@ const Projects = () => {
                       transition={{ duration: 0.4 }}
                       style={{ transformOrigin: 'left', width: '100%' }}
                     />
+                    {/* Overlay actions */}
+                    <motion.div
+                      className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                      initial={{ opacity: 0 }}
+                      animate={hoveredProject === project.id ? { opacity: 1 } : { opacity: 0 }}
+                      transition={{ duration: 0.25 }}
+                    >
+                      <div className="flex gap-4 pointer-events-auto">
+                        {project.link && (
+                          <a href={project.link} target="_blank" rel="noreferrer" className="px-4 py-2 bg-black/50 border border-gray-600 rounded-md text-white magnetic interactive">
+                            Live
+                          </a>
+                        )}
+                        <a href={project.link || '#'} target="_blank" rel="noreferrer" className="px-4 py-2 bg-black/50 border border-gray-600 rounded-md text-white magnetic interactive">
+                          Code
+                        </a>
+                      </div>
+                    </motion.div>
                   </div>
                 </div>
               </motion.div>

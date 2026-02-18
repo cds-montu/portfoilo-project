@@ -85,6 +85,38 @@ body {
   opacity: 1;
 }
 
+/* Magnetic element baseline */
+.magnetic {
+  transition: transform 0.22s cubic-bezier(0.2, 0.9, 0.2, 1);
+  will-change: transform;
+}
+
+/* Project card baseline */
+.project-card {
+  transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.2, 1), box-shadow 0.28s ease;
+}
+
+.skill-card {
+  transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.2, 1), box-shadow 0.28s ease;
+}
+
+/* Ripple utility for buttons */
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+.ripple::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 50%;
+  transform: scale(1);
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* Scroll reveal animations */
 .reveal {
   opacity: 0;

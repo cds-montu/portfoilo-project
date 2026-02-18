@@ -45,28 +45,24 @@ const CustomCursur = () => {
     // Detect hover on buttons, links, and interactive elements
     const handleMouseOver = (e) => {
       const target = e.target;
-      if (
+      const interactive = (
         target.tagName === 'BUTTON' ||
         target.tagName === 'A' ||
-        target.classList.contains('interactive') ||
-        target.closest('button') ||
-        target.closest('a')
-      ) {
-        setIsHovering(true);
-      }
+        (target.classList && target.classList.contains('interactive')) ||
+        !!target.closest && (target.closest('button') || target.closest('a') || target.closest('.magnetic'))
+      );
+      if (interactive) setIsHovering(true);
     };
 
     const handleMouseOut = (e) => {
       const target = e.target;
-      if (
+      const interactive = (
         target.tagName === 'BUTTON' ||
         target.tagName === 'A' ||
-        target.classList.contains('interactive') ||
-        target.closest('button') ||
-        target.closest('a')
-      ) {
-        setIsHovering(false);
-      }
+        (target.classList && target.classList.contains('interactive')) ||
+        !!target.closest && (target.closest('button') || target.closest('a') || target.closest('.magnetic'))
+      );
+      if (interactive) setIsHovering(false);
     };
 
     // Start animation loop
@@ -78,6 +74,34 @@ const CustomCursur = () => {
     document.addEventListener('mouseover', handleMouseOver);
     document.addEventListener('mouseout', handleMouseOut);
 
+    // Magnetic effect for elements with .magnetic class
+    const magnets = new Set();
+    const handleMagnetMove = (e) => {
+      const x = e.clientX;
+      const y = e.clientY;
+      magnets.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const dx = x - cx;
+        const dy = y - cy;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const max = 120; // attraction radius
+        if (dist < max) {
+          const strength = (1 - dist / max) * 12; // px of translate
+          el.style.transform = `translate(${dx /  (max/strength)}px, ${dy / (max/strength)}px)`;
+        } else {
+          el.style.transform = '';
+        }
+      });
+    };
+
+    const registerMagnets = () => {
+      document.querySelectorAll('.magnetic').forEach((el) => magnets.add(el));
+    };
+    registerMagnets();
+    document.addEventListener('mousemove', handleMagnetMove);
+
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
@@ -87,6 +111,7 @@ const CustomCursur = () => {
       window.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('mouseover', handleMouseOver);
       document.removeEventListener('mouseout', handleMouseOut);
+      document.removeEventListener('mousemove', handleMagnetMove);
     };
   }, []);
 
