@@ -9,6 +9,35 @@ html {
   scroll-behavior: smooth !important;
 }
 
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  :root {
+    --app-base-font: 14px;
+    --motion-scale: 0.9;
+  }
+
+  html, body, #root {
+    font-size: var(--app-base-font);
+  }
+
+  /* Reduce heavy transitions on small screens */
+  a, button, input, textarea {
+    transition-duration: 120ms !important;
+  }
+
+  /* Reduce blur/glow intensity for performance */
+  .blur-3xl { filter: blur(18px) !important; }
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* Custom styling for text reveals */
 .text-gradient {
   background: linear-gradient(45deg, #ff6b6b, #ff5252);
@@ -32,4 +61,16 @@ a, button, input, textarea {
 /* Prevent scrollbar jump */
 html {
   scrollbar-gutter: stable;
+}
+
+/* Pulse animation for cursor outer ring on hover */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.2;
+  }
 }

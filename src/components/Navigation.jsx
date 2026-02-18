@@ -35,12 +35,15 @@ const Navigation = () => {
   const isActive = (sectionId) => activeLink === sectionId;
 
   const menuVariants = {
-    hidden: { opacity: 0, x: -300 },
+    hidden: { opacity: 0, x: '-100%' },
     visible: {
       opacity: 1,
       x: 0,
       transition: {
-        staggerChildren: 0.1,
+        type: 'spring',
+        stiffness: 300,
+        damping: 30,
+        staggerChildren: 0.06,
       },
     },
   };
@@ -51,6 +54,13 @@ const Navigation = () => {
       opacity: 1,
       x: 0,
     },
+  };
+
+  const lineVariants = {
+    closed: { rotate: 0, y: 0, opacity: 1 },
+    topOpen: { rotate: 45, y: 6 },
+    middleOpen: { opacity: 0 },
+    bottomOpen: { rotate: -45, y: -6 },
   };
 
   return (
@@ -108,42 +118,52 @@ const Navigation = () => {
           Let's Connect
         </motion.button>
 
-        {/* Mobile menu button */}
+        {/* Mobile menu button (animated morph to X) */}
         <motion.button
-          className="md:hidden w-10 h-10 flex flex-col justify-center items-center gap-1.5 bg-none border-none"
+          aria-label="Toggle menu"
+          aria-expanded={isOpen}
+          className="md:hidden w-12 h-12 flex items-center justify-center bg-none border-none rounded-md"
           onClick={() => setIsOpen(!isOpen)}
-          whileTap={{ scale: 0.9 }}
+          whileTap={{ scale: 0.95 }}
         >
-          <motion.span
-            className="w-6 h-0.5 bg-white"
-            animate={isOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
-          />
-          <motion.span
-            className="w-6 h-0.5 bg-white"
-            animate={isOpen ? { opacity: 0 } : { opacity: 1 }}
-          />
-          <motion.span
-            className="w-6 h-0.5 bg-white"
-            animate={isOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }}
-          />
+          <div className="relative w-8 h-6">
+            <motion.span
+              className="absolute left-0 right-0 h-0.5 bg-white block"
+              variants={lineVariants}
+              animate={isOpen ? 'topOpen' : 'closed'}
+              transition={{ duration: 0.22 }}
+            />
+            <motion.span
+              className="absolute left-0 right-0 h-0.5 bg-white block"
+              style={{ top: '50%' }}
+              variants={lineVariants}
+              animate={isOpen ? 'middleOpen' : 'closed'}
+              transition={{ duration: 0.18 }}
+            />
+            <motion.span
+              className="absolute left-0 right-0 h-0.5 bg-white block"
+              variants={lineVariants}
+              animate={isOpen ? 'bottomOpen' : 'closed'}
+              transition={{ duration: 0.22 }}
+            />
+          </div>
         </motion.button>
       </div>
 
       {/* Mobile Navigation Menu */}
-      {isOpen && (
-        <motion.div
-          variants={menuVariants}
-          initial="hidden"
-          animate="visible"
-          className="md:hidden absolute top-full left-0 right-0 bg-primary/95 backdrop-blur-md border-b border-gray-800"
-        >
-          <div className="px-6 py-4 space-y-4">
+      <motion.div
+        variants={menuVariants}
+        initial="hidden"
+        animate={isOpen ? 'visible' : 'hidden'}
+        className={`md:hidden fixed inset-0 bg-primary/95 backdrop-blur-md z-50 ${isOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}
+      >
+        <div className="px-6 pt-24 pb-8 h-full overflow-auto">
             {navItems.map((item) => (
               <motion.button
                 key={item.id}
                 onClick={() => handleNavClick(item.id)}
                 variants={itemVariants}
-                className={`block w-full text-left font-medium py-2 transition-colors ${
+                className={`block w-full text-left font-medium py-4 text-2xl transition-colors ${
                   isActive(item.id) ? 'text-red-500' : (item.id === 'home' ? 'text-white' : 'text-gray-300 hover:text-white')
                 }`}
               >
@@ -153,14 +173,13 @@ const Navigation = () => {
             <motion.button
               variants={itemVariants}
               onClick={() => handleNavClick('contact')}
-              className="w-full mt-4 px-6 py-2 bg-red-600 text-white rounded-lg font-semibold"
+              className="w-full mt-6 px-6 py-4 bg-red-600 text-white rounded-lg font-semibold text-lg"
               whileTap={{ scale: 0.95 }}
             >
               Let's Connect
             </motion.button>
-          </div>
-        </motion.div>
-      )}
+        </div>
+      </motion.div>
     </motion.nav>
   );
 };

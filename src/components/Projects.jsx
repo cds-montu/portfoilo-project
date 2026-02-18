@@ -16,6 +16,7 @@ const Projects = () => {
       tags: ['React', 'Redux Toolkit', 'Node.js', 'MySQL'],
       accent: 'from-blue-500 to-cyan-500',
       image: '🛒',
+      link:"https://minimalist-fashion.vercel.app"
     },
     {
       id: 2,
@@ -24,14 +25,16 @@ const Projects = () => {
       tags: ['React', 'MUI', 'Express', 'MySQL'],
       accent: 'from-purple-500 to-pink-500',
       image: '📊',
+      link:"https://minimalist-fashion.vercel.app/admin"
     },
     {
       id: 3,
-      title: 'Content Management System',
-      description: 'Scalable CMS built with React frontend, Node.js backend, featuring rich text editing, media management, scheduled publishing, and user roles.',
-      tags: ['Next.js', 'Express.js', 'MySQL', 'Knex.js'],
+      title: 'Photography Project',
+      description: 'Scalable CMS built with React frontend, featuring rich text editing, media management, scheduled publishing, and user roles.',
+      tags: ['React', 'Redux Toolkit', 'Node.js', 'MySQL'],
       accent: 'from-green-500 to-emerald-500',
       image: '📝',
+      link:"https://studio-omega-liard.vercel.app/"
     },
     {
       id: 4,
@@ -83,9 +86,9 @@ const Projects = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-5xl md:text-6xl font-bold mb-4">Recent Projects</h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Full-stack applications built with modern technologies, featuring scalable architecture, intuitive UI, and robust backend systems
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 leading-tight text-white">Recent Projects</h2>
+          <p className="text-gray-300 text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
+            Full-stack applications built with modern technologies — scalable architecture, intuitive UI, and robust backend systems.
           </p>
         </motion.div>
 
@@ -94,7 +97,7 @@ const Projects = () => {
           variants={containerVariants}
           initial="hidden"
           animate={isVisible ? 'visible' : 'hidden'}
-          className="space-y-8"
+          className="space-y-10"
         >
           {projects.map((project, idx) => (
             <motion.div
@@ -106,28 +109,28 @@ const Projects = () => {
             >
               <motion.div
                 className="relative rounded-2xl overflow-hidden"
-                whileHover={{ y: -8 }}
-                transition={{ type: 'spring', damping: 20, stiffness: 200 }}
+                whileHover={{ y: -6 }}
+                transition={{ type: 'spring', damping: 22, stiffness: 160 }}
               >
                 {/* Project card container */}
-                <div className={`relative bg-gradient-to-br ${project.accent} bg-opacity-5 border border-opacity-20 border-white overflow-hidden`}>
+                <div className={`relative bg-gradient-to-br ${project.accent} bg-opacity-8 border border-opacity-20 border-white overflow-hidden shadow-lg backdrop-blur-sm`}>
                   {/* Animated background gradient */}
                   <motion.div
                     className={`absolute inset-0 bg-gradient-to-br ${project.accent} opacity-0`}
-                    animate={hoveredProject === project.id ? { opacity: 0.1 } : { opacity: 0 }}
+                    animate={hoveredProject === project.id ? { opacity: 0.12 } : { opacity: 0 }}
                     transition={{ duration: 0.3 }}
                   />
 
                   {/* Content */}
-                  <div className="relative z-10 p-8 md:p-12">
-                    <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
+                  <div className="relative z-10 p-6 md:p-10">
+                    <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-center md:items-start">
                       {/* Image/Icon section */}
                       <motion.div
                         className="flex-shrink-0"
-                        animate={hoveredProject === project.id ? { scale: 1.1, rotate: 5 } : { scale: 1, rotate: 0 }}
+                        animate={hoveredProject === project.id ? { scale: 1.06, rotate: 4 } : { scale: 1, rotate: 0 }}
                         transition={{ type: 'spring', damping: 20 }}
                       >
-                        <div className="text-8xl md:text-9xl opacity-20 group-hover:opacity-40 transition-opacity">
+                        <div className="text-7xl md:text-8xl opacity-18 group-hover:opacity-40 transition-opacity">
                           {project.image}
                         </div>
                       </motion.div>
@@ -135,20 +138,20 @@ const Projects = () => {
                       {/* Text content */}
                       <div className="flex-1">
                         <motion.h3
-                          className="text-3xl md:text-4xl font-bold mb-3 text-white"
-                          animate={hoveredProject === project.id ? { x: 10 } : { x: 0 }}
+                          className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-3 text-white leading-tight"
+                          animate={hoveredProject === project.id ? { x: 8 } : { x: 0 }}
                           transition={{ type: 'spring', damping: 20 }}
                         >
                           {project.title}
                         </motion.h3>
 
-                        <p className="text-gray-400 text-lg mb-6 leading-relaxed max-w-2xl">
+                        <p className="text-gray-200 text-base md:text-lg mb-6 leading-relaxed max-w-3xl">
                           {project.description}
                         </p>
 
                         {/* Tags */}
                         <motion.div
-                          className="flex flex-wrap gap-2 mb-6"
+                          className="flex flex-wrap gap-3 mb-6"
                           variants={containerVariants}
                           initial="hidden"
                           animate={hoveredProject === project.id ? 'visible' : 'hidden'}
@@ -156,10 +159,10 @@ const Projects = () => {
                           {project.tags.map((tag, tagIdx) => (
                             <motion.span
                               key={tagIdx}
-                              initial={{ opacity: 0, scale: 0.8 }}
+                              initial={{ opacity: 0, scale: 0.9 }}
                               animate={{ opacity: 1, scale: 1 }}
                               transition={{ delay: tagIdx * 0.05 }}
-                              className={`px-3 py-1 rounded-lg bg-gradient-to-r ${project.accent} bg-opacity-20 text-sm font-medium text-gray-300`}
+                              className={`px-3 py-1 rounded-lg bg-gradient-to-r ${project.accent} bg-opacity-25 text-sm md:text-base font-medium text-gray-100`}
                             >
                               {tag}
                             </motion.span>
@@ -169,14 +172,14 @@ const Projects = () => {
                         {/* CTA Button */}
                         <motion.button
                           onClick={() => scrollToSection('contact')}
-                          className={`px-6 py-3 rounded-lg bg-gradient-to-r ${project.accent} text-white font-semibold relative overflow-hidden group`}
-                          whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(255, 107, 107, 0.3)' }}
-                          whileTap={{ scale: 0.95 }}
-                          animate={hoveredProject === project.id ? { x: 10 } : { x: 0 }}
+                          className={`px-8 py-3 rounded-lg bg-gradient-to-r ${project.accent} text-white font-semibold relative overflow-hidden group`}
+                          whileHover={{ scale: 1.04, boxShadow: '0 0 28px rgba(255, 107, 107, 0.28)' }}
+                          whileTap={{ scale: 0.98 }}
+                          animate={hoveredProject === project.id ? { x: 8 } : { x: 0 }}
                         >
                           <motion.span
-                            className="relative z-10"
-                            animate={hoveredProject === project.id ? { opacity: [1, 0.7, 1] } : { opacity: 1 }}
+                            className="relative z-10 text-base md:text-lg"
+                            animate={hoveredProject === project.id ? { opacity: [1, 0.8, 1] } : { opacity: 1 }}
                           >
                             Discuss Project →
                           </motion.span>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useSmoothScroll } from '../hooks/useNavigation';
 
 const Hero = () => {
   const containerVariants = {
@@ -38,6 +39,8 @@ const Hero = () => {
     }),
   };
 
+  const { scrollToSection } = useSmoothScroll();
+
   return (
     <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden gradient-primary">
       {/* Background gradient animation */}
@@ -67,7 +70,7 @@ const Hero = () => {
         className="z-10 text-center px-6 max-w-4xl"
       >
         {/* Main heading */}
-        <motion.h1 variants={itemVariants} className="text-6xl md:text-7xl font-bold mb-6">
+        <motion.h1 variants={itemVariants} className="text-4xl sm:text-6xl md:text-7xl font-bold mb-6">
           <motion.span
             className="block overflow-hidden"
             variants={textVariants}
@@ -99,6 +102,7 @@ const Hero = () => {
           className="flex flex-col sm:flex-row justify-center gap-4"
         >
           <motion.button
+            onClick={() => scrollToSection('projects')}
             className="px-8 py-3 bg-red-600 text-white rounded-lg font-semibold text-lg glow-hover"
             whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(255, 107, 107, 0.5)' }}
             whileTap={{ scale: 0.95 }}
@@ -107,6 +111,7 @@ const Hero = () => {
             View My Work
           </motion.button>
           <motion.button
+            onClick={() => scrollToSection('contact')}
             className="px-8 py-3 border-2 border-gray-500 text-gray-300 rounded-lg font-semibold text-lg hover:border-red-500"
             whileHover={{ scale: 1.05, borderColor: '#ff6b6b' }}
             whileTap={{ scale: 0.95 }}
